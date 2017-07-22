@@ -168,6 +168,10 @@ else(WIN32)
 endif(WIN32)
 
 # this installs the python library
+set_target_properties(
+    area
+    PROPERTIES INSTALL_RPATH ${Python_site_packages}
+)
 install(
     TARGETS area
     DESTINATION ${Python_site_packages}
