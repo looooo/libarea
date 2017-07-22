@@ -353,7 +353,8 @@ void init_pyarea(py::module &m){
     m.def("TangentialArc", TangentialArc);
 }
 
-py::module m("area");
-PYBIND11_MODULE(area, m){
+PYBIND11_PLUGIN(area){
+    py::module m("area");
     init_pyarea(m);
+    return m.ptr();
 };
