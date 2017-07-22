@@ -30,11 +30,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "AreaOrderer.h"
 #include "Area.h"
 
-using namespace std;
 
 CAreaOrderer* CInnerCurves::area_orderer = NULL;
 
-CInnerCurves::CInnerCurves(shared_ptr<CInnerCurves> pOuter, shared_ptr<CCurve> curve)
+CInnerCurves::CInnerCurves(std::shared_ptr<CInnerCurves> pOuter, std::shared_ptr<CCurve> curve)
 :m_pOuter(pOuter)
 ,m_curve(curve)
 {
@@ -44,13 +43,13 @@ CInnerCurves::~CInnerCurves()
 {
 }
 
-void CInnerCurves::Insert(shared_ptr<CCurve> pcurve)
+void CInnerCurves::Insert(std::shared_ptr<CCurve> pcurve)
 {
-	std::list<shared_ptr<CInnerCurves> > outside_of_these;
-	std::list<shared_ptr<CInnerCurves> > crossing_these;
+	std::list<std::shared_ptr<CInnerCurves> > outside_of_these;
+	std::list<std::shared_ptr<CInnerCurves> > crossing_these;
 
 	// check all inner curves
-    for(shared_ptr<CInnerCurves> c : m_inner_curves) {
+    for(std::shared_ptr<CInnerCurves> c : m_inner_curves) {
 
 		switch(GetOverlapType(*pcurve, *(c->m_curve)))
 		{
@@ -73,17 +72,17 @@ void CInnerCurves::Insert(shared_ptr<CCurve> pcurve)
 	}
 
 	// add as a new inner
-	shared_ptr<CInnerCurves> new_item(new CInnerCurves(shared_from_this(), pcurve));
+	std::shared_ptr<CInnerCurves> new_item(new CInnerCurves(shared_from_this(), pcurve));
 	this->m_inner_curves.insert(new_item);
 
-    for(shared_ptr<CInnerCurves> c : outside_of_these) {
+    for(std::shared_ptr<CInnerCurves> c : outside_of_these) {
 		// move items
 		c->m_pOuter = new_item;
 		new_item->m_inner_curves.insert(c);
 		this->m_inner_curves.erase(c);
 	}
 
-    for(shared_ptr<CInnerCurves> c : crossing_these) {
+    for(std::shared_ptr<CInnerCurves> c : crossing_these) {
 		// unite these
 		new_item->Unite(c);
 		this->m_inner_curves.erase(c);
@@ -98,9 +97,9 @@ void CInnerCurves::GetArea(CArea &area, bool outside, bool use_curve)
 		outside = !outside;
 	}
 
-	std::list<shared_ptr<CInnerCurves> > do_after;
+	std::list<std::shared_ptr<CInnerCurves> > do_after;
 
-	for(shared_ptr<CInnerCurves> c: m_inner_curves) {
+	for(std::shared_ptr<CInnerCurves> c: m_inner_curves) {
 		area.m_curves.push_back(*c->m_curve);
 		if(!outside)area.m_curves.back().Reverse();
 
@@ -108,14 +107,14 @@ void CInnerCurves::GetArea(CArea &area, bool outside, bool use_curve)
 		else do_after.push_back(c);
 	}
 
-	for(shared_ptr<CInnerCurves> c : do_after)
+	for(std::shared_ptr<CInnerCurves> c : do_after)
 		c->GetArea(area, !outside, false);
 }
 
-void CInnerCurves::Unite(shared_ptr<CInnerCurves> c)
+void CInnerCurves::Unite(std::shared_ptr<CInnerCurves> c)
 {
 	// unite all the curves in c, with this one
-	shared_ptr<CArea> new_area(new CArea());
+	std::shared_ptr<CArea> new_area(new CArea());
 	new_area->m_curves.push_back(*m_curve);
     m_unite_area = new_area;
 
@@ -128,21 +127,21 @@ void CInnerCurves::Unite(shared_ptr<CInnerCurves> c)
 	{
 		CCurve &curve = *It;
 		if(It == m_unite_area->m_curves.begin())
-			m_curve = make_shared<CCurve>(curve);
+			m_curve = std::make_shared<CCurve>(curve);
 		else
 		{
 			if(curve.IsClockwise())curve.Reverse();
-			Insert(shared_ptr<CCurve>(new CCurve(curve)));
+			Insert(std::shared_ptr<CCurve>(new CCurve(curve)));
 		}
 	}
 }
 
 CAreaOrderer::CAreaOrderer()
-    :m_top_level(make_shared<CInnerCurves>())
+    :m_top_level(std::make_shared<CInnerCurves>())
 {
 }
 
-void CAreaOrderer::Insert(shared_ptr<CCurve> pcurve)
+void CAreaOrderer::Insert(std::shared_ptr<CCurve> pcurve)
 {
 	CInnerCurves::area_orderer = this;
 

@@ -1071,7 +1071,7 @@ return;
 
 	void Kurve::Clear()
 	{
-		for(vector<SpanVertex*>::iterator It = m_spans.begin(); It != m_spans.end(); It++)
+		for(std::vector<SpanVertex*>::iterator It = m_spans.begin(); It != m_spans.end(); It++)
 		{
 			SpanVertex* spv = *It;
 			delete spv;
@@ -1125,9 +1125,9 @@ return;
 		return area * xscale * xscale;
 	}
 
-	static void bubblesort(vector<Point>&p, vector<double>& d);
+	static void bubblesort(std::vector<Point>&p, std::vector<double>& d);
 
-	int Kurve::Intof(const Span& spin, vector<Point>& p)const {
+	int Kurve::Intof(const Span& spin, std::vector<Point>& p)const {
 		// returns a vector (array) of intersection points
 		int totalPoints = 0;
 		for(int i = 1; i <= nSpans(); i++) {
@@ -1143,7 +1143,7 @@ return;
 		}
 		if(totalPoints) {
 			// sort intersects along span
-			vector<double> d;
+			std::vector<double> d;
 			Span temp(spin);
 
 			for(int i = 0; i < (int)p.size(); i++) {
@@ -1157,7 +1157,7 @@ return;
 		return totalPoints;
 	}
 
-	static void bubblesort(vector<Point>&p, vector<double>& d) {
+	static void bubblesort(std::vector<Point>&p, std::vector<double>& d) {
 
 		for(int pass = 1; pass < (int)p.size() ; pass++) {
 			for(int j = 0; j < (int)p.size() - 1; j++) {
@@ -1174,14 +1174,14 @@ return;
 		}
 	}
 
-	int Kurve::Intof(const Kurve&k, vector<Point>& p)const {
-		vector<Point> all;
+	int Kurve::Intof(const Kurve&k, std::vector<Point>& p)const {
+		std::vector<Point> all;
 
 		int totalPoints = 0;
 		for(int i = 1; i <= nSpans(); i++) {
 			Span sp;
 			Get(i, sp, true, true);
-			vector<Point> p0;
+			std::vector<Point> p0;
 			totalPoints += k.Intof(sp, p0);
 
 			for(int j = 0; j < (int)p0.size(); j++) all.push_back(p0[j]);

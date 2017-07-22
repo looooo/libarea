@@ -5,9 +5,7 @@ if (CMAKE_BUILD_TOOL MATCHES "make")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif (CMAKE_BUILD_TOOL MATCHES "make")
 
-if(MSVC)
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS /wd4244)
-endif(MSVC)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(Python_ADDITIONAL_VERSIONS ${PYTHON_VERSION})
 find_package(PythonInterp ${PYTHON_VERSION})
@@ -16,27 +14,33 @@ find_package(PythonLibs ${PYTHON_VERSION})
 include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-if(NOT FREECAD_LIBPACK_USE OR FREECAD_LIBPACK_CHECKFILE_CLBUNDLER)
-    if(NOT PYTHON_VERSION_MAJOR LESS 3)
-        find_package( Boost COMPONENTS python3)
-        if (NOT Boost_PYTHON3_FOUND)
-            find_package( Boost COMPONENTS python REQUIRED)
+
+OPTION(USE_BOOST_PYTHON "if not set, pybind11 is used" OFF)
+
+if(USE_BOOST_PYTHON)
+    if(NOT FREECAD_LIBPACK_USE OR FREECAD_LIBPACK_CHECKFILE_CLBUNDLER)
+        if(NOT PYTHON_VERSION_MAJOR LESS 3)
+            find_package( Boost COMPONENTS python3)
+            if (NOT Boost_PYTHON3_FOUND)
+                find_package( Boost COMPONENTS python REQUIRED)
+            endif()
+        else()
+            find_package( Boost COMPONENTS python REQUIRED)  # find BOOST and boost-python
+        endif()
+
+        if(Boost_FOUND)
+            include_directories(${Boost_INCLUDE_DIRS})
+            MESSAGE(STATUS "found Boost: " ${Boost_LIB_VERSION})
+            MESSAGE(STATUS "boost-incude dirs are: " ${Boost_INCLUDE_DIRS})
+            MESSAGE(STATUS "boost-python lib is: " ${Boost_PYTHON_LIBRARY})
+            MESSAGE(STATUS "boost_LIBRARY_DIRS is: " ${Boost_LIBRARY_DIRS})
+            MESSAGE(STATUS "Boost_LIBRARIES is: " ${Boost_LIBRARIES})
         endif()
     else()
-        find_package( Boost COMPONENTS python REQUIRED)  # find BOOST and boost-python
-    endif()
-
-    if(Boost_FOUND)
         include_directories(${Boost_INCLUDE_DIRS})
-        MESSAGE(STATUS "found Boost: " ${Boost_LIB_VERSION})
-        MESSAGE(STATUS "boost-incude dirs are: " ${Boost_INCLUDE_DIRS})
-        MESSAGE(STATUS "boost-python lib is: " ${Boost_PYTHON_LIBRARY})
-        MESSAGE(STATUS "boost_LIBRARY_DIRS is: " ${Boost_LIBRARY_DIRS})
-        MESSAGE(STATUS "Boost_LIBRARIES is: " ${Boost_LIBRARIES})
     endif()
-else()
-    include_directories(${Boost_INCLUDE_DIRS})
 endif()
+
 
 # this defines the source-files for library
 set(AREA_SRC_COMMON
@@ -61,9 +65,15 @@ set(AREA_SRC_CLIPPER
 )
 
 # this defines the additional source-files for python module (wrapper to libarea)
-set(PYAREA_SRC
-    PythonStuff.cpp
-)
+if (USE_BOOST_PYTHON)
+    set(PYAREA_SRC
+        PythonStuff.cpp
+    )
+else(USE_BOOST_PYTHON)
+    set(PYAREA_SRC
+        pyarea.cpp
+    )
+endif(USE_BOOST_PYTHON)
 
 # this defines the headers
 if(DEFINED INCLUDE_INSTALL_DIR)
@@ -84,11 +94,12 @@ add_library(
   ${AREA_SRC_CLIPPER}
 )
 
-add_library(
+PYTHON_ADD_MODULE(
     area
     MODULE
     ${PYAREA_SRC}
 )
+
 
 if(MSVC)
     set(area_native_LIBS

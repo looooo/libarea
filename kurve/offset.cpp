@@ -13,7 +13,7 @@ namespace geoff_geometry {
 	static Kurve eliminateLoops(const Kurve& k , const Kurve& originalk, double offset, int& ret);
 	static bool DoesIntersInterfere(const Point& pInt, const Kurve& k, double offset);
 
-	int Kurve::Offset(vector<Kurve*>&OffsetKurves, double offset, int direction, int method, int& ret)const {
+	int Kurve::Offset(std::vector<Kurve*>&OffsetKurves, double offset, int direction, int method, int& ret)const {
 
 		switch(method) {
 	case NO_ELIMINATION:

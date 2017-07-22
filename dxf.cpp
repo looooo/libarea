@@ -5,7 +5,6 @@
 
 #include "dxf.h"
 
-using namespace std;
 static const double Pi = 3.14159265358979323846264338327950288419716939937511;
 
 CDxfWrite::CDxfWrite(const char* filepath)
@@ -13,9 +12,9 @@ CDxfWrite::CDxfWrite(const char* filepath)
 	// start the file
 	m_fail = false;
 #ifdef __WXMSW__
-	m_ofs = new ofstream(filepath, ios::out);
+	m_ofs = new std::ofstream(filepath, std::ios::out);
 #else
-	m_ofs = new ofstream(filepath, ios::out);
+	m_ofs = new std::ofstream(filepath, std::ios::out);
 #endif
 	if(!(*m_ofs)){
 		m_fail = true;
@@ -24,18 +23,18 @@ CDxfWrite::CDxfWrite(const char* filepath)
 	m_ofs->imbue(std::locale("C"));
 
 	// start
-	(*m_ofs) << 0          << endl;
-	(*m_ofs) << "SECTION"  << endl;
-	(*m_ofs) << 2          << endl;
-	(*m_ofs) << "ENTITIES" << endl;
+	(*m_ofs) << 0          << std::endl;
+	(*m_ofs) << "SECTION"  << std::endl;
+	(*m_ofs) << 2          << std::endl;
+	(*m_ofs) << "ENTITIES" << std::endl;
 }
 
 CDxfWrite::~CDxfWrite()
 {
 	// end
-	(*m_ofs) << 0          << endl;
-	(*m_ofs) << "ENDSEC"   << endl;
-	(*m_ofs) << 0          << endl;
+	(*m_ofs) << 0          << std::endl;
+	(*m_ofs) << "ENDSEC"   << std::endl;
+	(*m_ofs) << 0          << std::endl;
 	(*m_ofs) << "EOF";
 
 	delete m_ofs;
@@ -43,36 +42,36 @@ CDxfWrite::~CDxfWrite()
 
 void CDxfWrite::WriteLine(const double* s, const double* e, const char* layer_name)
 {
-	(*m_ofs) << 0			<< endl;
-	(*m_ofs) << "LINE"		<< endl;
-	(*m_ofs) << 8			<< endl;	// Group code for layer name
-	(*m_ofs) << layer_name	<< endl;	// Layer number
-	(*m_ofs) << 10			<< endl;	// Start point of line
-	(*m_ofs) << s[0]		<< endl;	// X in WCS coordinates
-	(*m_ofs) << 20			<< endl;
-	(*m_ofs) << s[1]		<< endl;	// Y in WCS coordinates
-	(*m_ofs) << 30			<< endl;
-	(*m_ofs) << s[2]		<< endl;	// Z in WCS coordinates
-	(*m_ofs) << 11			<< endl;	// End point of line
-	(*m_ofs) << e[0]		<< endl;	// X in WCS coordinates
-	(*m_ofs) << 21			<< endl;
-	(*m_ofs) << e[1]		<< endl;	// Y in WCS coordinates
-	(*m_ofs) << 31			<< endl;
-	(*m_ofs) << e[2]		<< endl;	// Z in WCS coordinates
+	(*m_ofs) << 0			<< std::endl;
+	(*m_ofs) << "LINE"		<< std::endl;
+	(*m_ofs) << 8			<< std::endl;	// Group code for layer name
+	(*m_ofs) << layer_name	<< std::endl;	// Layer number
+	(*m_ofs) << 10			<< std::endl;	// Start point of line
+	(*m_ofs) << s[0]		<< std::endl;	// X in WCS coordinates
+	(*m_ofs) << 20			<< std::endl;
+	(*m_ofs) << s[1]		<< std::endl;	// Y in WCS coordinates
+	(*m_ofs) << 30			<< std::endl;
+	(*m_ofs) << s[2]		<< std::endl;	// Z in WCS coordinates
+	(*m_ofs) << 11			<< std::endl;	// End point of line
+	(*m_ofs) << e[0]		<< std::endl;	// X in WCS coordinates
+	(*m_ofs) << 21			<< std::endl;
+	(*m_ofs) << e[1]		<< std::endl;	// Y in WCS coordinates
+	(*m_ofs) << 31			<< std::endl;
+	(*m_ofs) << e[2]		<< std::endl;	// Z in WCS coordinates
 }
 
 void CDxfWrite::WritePoint(const double* s, const char* layer_name)
 {
-	(*m_ofs) << 0			<< endl;
-	(*m_ofs) << "POINT"		<< endl;
-	(*m_ofs) << 8			<< endl;	// Group code for layer name
-	(*m_ofs) << layer_name	<< endl;	// Layer number
-	(*m_ofs) << 10			<< endl;	// Start point of line
-	(*m_ofs) << s[0]		<< endl;	// X in WCS coordinates
-	(*m_ofs) << 20			<< endl;
-	(*m_ofs) << s[1]		<< endl;	// Y in WCS coordinates
-	(*m_ofs) << 30			<< endl;
-	(*m_ofs) << s[2]		<< endl;	// Z in WCS coordinates
+	(*m_ofs) << 0			<< std::endl;
+	(*m_ofs) << "POINT"		<< std::endl;
+	(*m_ofs) << 8			<< std::endl;	// Group code for layer name
+	(*m_ofs) << layer_name	<< std::endl;	// Layer number
+	(*m_ofs) << 10			<< std::endl;	// Start point of line
+	(*m_ofs) << s[0]		<< std::endl;	// X in WCS coordinates
+	(*m_ofs) << 20			<< std::endl;
+	(*m_ofs) << s[1]		<< std::endl;	// Y in WCS coordinates
+	(*m_ofs) << 30			<< std::endl;
+	(*m_ofs) << s[2]		<< std::endl;	// Z in WCS coordinates
 }
 
 void CDxfWrite::WriteArc(const double* s, const double* e, const double* c, bool dir, const char* layer_name)
@@ -90,38 +89,38 @@ void CDxfWrite::WriteArc(const double* s, const double* e, const double* c, bool
 		start_angle = end_angle;
 		end_angle = temp;
 	}
-	(*m_ofs) << 0			<< endl;
-	(*m_ofs) << "ARC"		<< endl;
-	(*m_ofs) << 8			<< endl;	// Group code for layer name
-	(*m_ofs) << layer_name	<< endl;	// Layer number
-	(*m_ofs) << 10			<< endl;	// Centre X
-	(*m_ofs) << c[0]		<< endl;	// X in WCS coordinates
-	(*m_ofs) << 20			<< endl;
-	(*m_ofs) << c[1]		<< endl;	// Y in WCS coordinates
-	(*m_ofs) << 30			<< endl;
-	(*m_ofs) << c[2]		<< endl;	// Z in WCS coordinates
-	(*m_ofs) << 40			<< endl;	//
-	(*m_ofs) << radius		<< endl;	// Radius
-	(*m_ofs) << 50			<< endl;
-	(*m_ofs) << start_angle	<< endl;	// Start angle
-	(*m_ofs) << 51			<< endl;
-	(*m_ofs) << end_angle	<< endl;	// End angle
+	(*m_ofs) << 0			<< std::endl;
+	(*m_ofs) << "ARC"		<< std::endl;
+	(*m_ofs) << 8			<< std::endl;	// Group code for layer name
+	(*m_ofs) << layer_name	<< std::endl;	// Layer number
+	(*m_ofs) << 10			<< std::endl;	// Centre X
+	(*m_ofs) << c[0]		<< std::endl;	// X in WCS coordinates
+	(*m_ofs) << 20			<< std::endl;
+	(*m_ofs) << c[1]		<< std::endl;	// Y in WCS coordinates
+	(*m_ofs) << 30			<< std::endl;
+	(*m_ofs) << c[2]		<< std::endl;	// Z in WCS coordinates
+	(*m_ofs) << 40			<< std::endl;	//
+	(*m_ofs) << radius		<< std::endl;	// Radius
+	(*m_ofs) << 50			<< std::endl;
+	(*m_ofs) << start_angle	<< std::endl;	// Start angle
+	(*m_ofs) << 51			<< std::endl;
+	(*m_ofs) << end_angle	<< std::endl;	// End angle
 }
 
 void CDxfWrite::WriteCircle(const double* c, double radius, const char* layer_name)
 {
-	(*m_ofs) << 0			<< endl;
-	(*m_ofs) << "CIRCLE"		<< endl;
-	(*m_ofs) << 8			<< endl;	// Group code for layer name
-	(*m_ofs) << layer_name	<< endl;	// Layer number
-	(*m_ofs) << 10			<< endl;	// Centre X
-	(*m_ofs) << c[0]		<< endl;	// X in WCS coordinates
-	(*m_ofs) << 20			<< endl;
-	(*m_ofs) << c[1]		<< endl;	// Y in WCS coordinates
-	(*m_ofs) << 30			<< endl;
-	(*m_ofs) << c[2]		<< endl;	// Z in WCS coordinates
-	(*m_ofs) << 40			<< endl;	//
-	(*m_ofs) << radius		<< endl;	// Radius
+	(*m_ofs) << 0			<< std::endl;
+	(*m_ofs) << "CIRCLE"		<< std::endl;
+	(*m_ofs) << 8			<< std::endl;	// Group code for layer name
+	(*m_ofs) << layer_name	<< std::endl;	// Layer number
+	(*m_ofs) << 10			<< std::endl;	// Centre X
+	(*m_ofs) << c[0]		<< std::endl;	// X in WCS coordinates
+	(*m_ofs) << 20			<< std::endl;
+	(*m_ofs) << c[1]		<< std::endl;	// Y in WCS coordinates
+	(*m_ofs) << 30			<< std::endl;
+	(*m_ofs) << c[2]		<< std::endl;	// Z in WCS coordinates
+	(*m_ofs) << 40			<< std::endl;	//
+	(*m_ofs) << radius		<< std::endl;	// Radius
 }
 
 void CDxfWrite::WriteEllipse(const double* c, double major_radius, double minor_radius, double rotation, double start_angle, double end_angle, bool dir, const char* layer_name )
@@ -138,28 +137,28 @@ void CDxfWrite::WriteEllipse(const double* c, double major_radius, double minor_
 		start_angle = end_angle;
 		end_angle = temp;
 	}
-	(*m_ofs) << 0			<< endl;
-	(*m_ofs) << "ELLIPSE"		<< endl;
-	(*m_ofs) << 8			<< endl;	// Group code for layer name
-	(*m_ofs) << layer_name	<< endl;	// Layer number
-	(*m_ofs) << 10			<< endl;	// Centre X
-	(*m_ofs) << c[0]		<< endl;	// X in WCS coordinates
-	(*m_ofs) << 20			<< endl;
-	(*m_ofs) << c[1]		<< endl;	// Y in WCS coordinates
-	(*m_ofs) << 30			<< endl;
-	(*m_ofs) << c[2]		<< endl;	// Z in WCS coordinates
-	(*m_ofs) << 40			<< endl;	//
-	(*m_ofs) << ratio		<< endl;	// Ratio
-	(*m_ofs) << 11			<< endl;	//
-	(*m_ofs) << m[0]		<< endl;	// Major X
-	(*m_ofs) << 21			<< endl;
-	(*m_ofs) << m[1]		<< endl;	// Major Y
-	(*m_ofs) << 31			<< endl;
-	(*m_ofs) << m[2]		<< endl;	// Major Z
-	(*m_ofs) << 41		<< endl;
-	(*m_ofs) << start_angle	<< endl;	// Start angle
-	(*m_ofs) << 42		<< endl;
-	(*m_ofs) << end_angle	<< endl;	// End angle
+	(*m_ofs) << 0			<< std::endl;
+	(*m_ofs) << "ELLIPSE"		<< std::endl;
+	(*m_ofs) << 8			<< std::endl;	// Group code for layer name
+	(*m_ofs) << layer_name	<< std::endl;	// Layer number
+	(*m_ofs) << 10			<< std::endl;	// Centre X
+	(*m_ofs) << c[0]		<< std::endl;	// X in WCS coordinates
+	(*m_ofs) << 20			<< std::endl;
+	(*m_ofs) << c[1]		<< std::endl;	// Y in WCS coordinates
+	(*m_ofs) << 30			<< std::endl;
+	(*m_ofs) << c[2]		<< std::endl;	// Z in WCS coordinates
+	(*m_ofs) << 40			<< std::endl;	//
+	(*m_ofs) << ratio		<< std::endl;	// Ratio
+	(*m_ofs) << 11			<< std::endl;	//
+	(*m_ofs) << m[0]		<< std::endl;	// Major X
+	(*m_ofs) << 21			<< std::endl;
+	(*m_ofs) << m[1]		<< std::endl;	// Major Y
+	(*m_ofs) << 31			<< std::endl;
+	(*m_ofs) << m[2]		<< std::endl;	// Major Z
+	(*m_ofs) << 41		<< std::endl;
+	(*m_ofs) << start_angle	<< std::endl;	// Start angle
+	(*m_ofs) << 42		<< std::endl;
+	(*m_ofs) << end_angle	<< std::endl;	// End angle
 }
 
 CDxfRead::CDxfRead(const char* filepath)
@@ -171,7 +170,7 @@ CDxfRead::CDxfRead(const char* filepath)
 	strcpy(m_layer_name, "0");	// Default layer name
 	m_ignore_errors = true;
 
-	m_ifs = new ifstream(filepath);
+	m_ifs = new std::ifstream(filepath);
 	if(!(*m_ifs)){
 		m_fail = true;
 		return;

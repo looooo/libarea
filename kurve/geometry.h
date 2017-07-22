@@ -25,7 +25,6 @@
 #include <fstream>
 #include <string.h>
 
-using namespace std;
 
 
 namespace geoff_geometry {
@@ -202,7 +201,7 @@ inline bool FNEZ(double a, double tolerance = TIGHT_TOLERANCE) {return fabs(a) >
 
 	// 2d Point class
 	class Point {
-		friend wostream& operator << (wostream& op, Point& p);
+		friend std::wostream& operator << (std::wostream& op, Point& p);
 
 	public:
 		bool	ok;																// true if this point is defined correctly	
@@ -245,7 +244,7 @@ inline bool FNEZ(double a, double tolerance = TIGHT_TOLERANCE) {return fabs(a) >
 
 	// 3d point class
 	class Point3d {
-		friend wostream& operator <<(wostream& op, Point3d& p);
+		friend std::wostream& operator <<(std::wostream& op, Point3d& p);
 	public:
 //		bool	ok;																// true if this point is defined correctly	
 		double	x;																// x value
@@ -290,7 +289,7 @@ inline bool FNEZ(double a, double tolerance = TIGHT_TOLERANCE) {return fabs(a) >
 
 	// 2d vector class
 	class Vector2d{
-		friend wostream& operator <<(wostream& op, Vector2d& v);
+		friend std::wostream& operator <<(std::wostream& op, Vector2d& v);
 	private:
 		double dx, dy;		
 	public:
@@ -358,7 +357,7 @@ inline bool FNEZ(double a, double tolerance = TIGHT_TOLERANCE) {return fabs(a) >
 
 	// 3d vector class
 	class Vector3d{
-		friend wostream& operator <<(wostream& op, Vector3d& v);
+		friend std::wostream& operator <<(std::wostream& op, Vector3d& v);
 	private:
 		double dx, dy, dz;
 	public:
@@ -430,7 +429,7 @@ inline bool FNEZ(double a, double tolerance = TIGHT_TOLERANCE) {return fabs(a) >
 
 	// 2D cline x = x0 + t * dx;    y = y0 + t * dy
 	class CLine{
-		friend wostream& operator <<(wostream& op, CLine& cl);
+		friend std::wostream& operator <<(std::wostream& op, CLine& cl);
 	public:
 		bool ok;
 		Point p;
@@ -470,7 +469,7 @@ inline bool FNEZ(double a, double tolerance = TIGHT_TOLERANCE) {return fabs(a) >
 
 	// 2D circle 
 	class Circle{
-		friend wostream& operator <<(wostream& op, Circle& c);
+		friend std::wostream& operator <<(std::wostream& op, Circle& c);
 	public:
 		bool ok;
 		Point pc;
@@ -547,7 +546,7 @@ inline bool FNEZ(double a, double tolerance = TIGHT_TOLERANCE) {return fabs(a) >
 
 	// 2D line arc span
 	class Span{
-		friend wostream& operator <<(wostream& op, Span& span);
+		friend std::wostream& operator <<(std::wostream& op, Span& span);
 	public:
 		Point p0;			// start
 		Point p1;			// end
@@ -683,7 +682,7 @@ inline bool FNEZ(double a, double tolerance = TIGHT_TOLERANCE) {return fabs(a) >
 //	Span3d IsPtsSpan3d(const double* a, int n, double tolerance, double* deviation);
 
 	class Plane {
-		friend wostream& operator <<(wostream& op, Plane& pl);
+		friend std::wostream& operator <<(std::wostream& op, Plane& pl);
 
 	public:						// ax + by + cz + d = 0
 		bool ok;
@@ -710,7 +709,7 @@ inline bool FNEZ(double a, double tolerance = TIGHT_TOLERANCE) {return fabs(a) >
 #define SPANSTORAGE 32			// lessens number of object pointers
 
 	class spVertex {
-		friend wostream& operator <<(wostream& op, spVertex& sp);
+		friend std::wostream& operator <<(std::wostream& op, spVertex& sp);
 
 	public:
 		int type;
@@ -775,11 +774,11 @@ inline bool FNEZ(double a, double tolerance = TIGHT_TOLERANCE) {return fabs(a) >
 #endif
 
 	class Kurve : public Matrix{
-	friend wofstream& operator << (wofstream& op, Kurve& k);
-	friend wifstream& operator >> (wifstream& op, Kurve& k);
+	friend std::wofstream& operator << (std::wofstream& op, Kurve& k);
+	friend std::wifstream& operator >> (std::wifstream& op, Kurve& k);
 		
 	protected:
-		vector<SpanVertex*> m_spans;
+		std::vector<SpanVertex*> m_spans;
 		bool		m_started;
 		int			m_nVertices;					// number of vertices in Kurve
 		bool		m_isReversed;					// true if get spans reversed
@@ -857,11 +856,11 @@ inline bool FNEZ(double a, double tolerance = TIGHT_TOLERANCE) {return fabs(a) >
 		};
 		int		Reduce(double tolerance);					// reduce spans which are in tolerance
 
-		int		Offset(vector <Kurve*> &OffsetKurves, double offset, int direction, int method, int& ret)const;	// offset methods
+		int		Offset(std::vector<Kurve*> &OffsetKurves, double offset, int direction, int method, int& ret)const;	// offset methods
 		int		OffsetMethod1(Kurve& kOffset, double off, int direction,  int method, int& ret)const;
 		int		OffsetISOMethod(Kurve& kOffset, double off, int direction, bool BlendAll)const; // special offset (ISO radius - no span elimination)
-		int		Intof(const Span& sp, vector<Point>& p)const;			// intof span
-		int		Intof(const Kurve&k, vector<Point>& p)const;			// intof kurve
+		int		Intof(const Span& sp, std::vector<Point>& p)const;			// intof span
+		int		Intof(const Kurve&k, std::vector<Point>& p)const;			// intof kurve
 		bool	Compare(const Kurve* k, Matrix* m, bool bAllowMirror = true)const;				// compare 2 Kurves
 		void	ChangeStart(const Point *pNewStart, int startSpanno); // change the Kurve's startpoint
 		void	ChangeEnd(const Point *pNewEnd, int endSpanno); // change the Kurve's endpoint

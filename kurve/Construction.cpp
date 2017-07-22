@@ -60,7 +60,7 @@ namespace geoff_geometry {
 
 	// ostream operators  = non-member overload
 	// *********************************************************************************************************
-	wostream& operator << (wostream& op, Point& p){
+	std::wostream& operator << (std::wostream& op, Point& p){
 		// for debug - print point to file
 		if(p.ok == false)
 			op << L" ok=\"false\"";
@@ -69,7 +69,7 @@ namespace geoff_geometry {
 		return op;
 	}
 
-	wostream& operator <<(wostream& op, CLine& cl){
+	std::wostream& operator <<(std::wostream& op, CLine& cl){
 		// for debug - print cline to file
 		if(cl.ok == false)
 			op << L"(CLine UNSET)";
@@ -78,7 +78,7 @@ namespace geoff_geometry {
 		return op;
 	}
 
-	wostream& operator <<(wostream& op, Plane& pl){
+	std::wostream& operator <<(std::wostream& op, Plane& pl){
 		// for debug - print plane to file stream
 		if(pl.ok == false)
 			op << L"(Plane UNSET)";
@@ -87,7 +87,7 @@ namespace geoff_geometry {
 		return op;
 	}
 
-	ostream& operator << (ostream& op, Point3d& p){
+	std::ostream& operator << (std::ostream& op, Point3d& p){
 		// for debug - print point to file
 //		if(p.ok == false)
 //			op << "ok=\"false\"";
@@ -97,19 +97,19 @@ namespace geoff_geometry {
 
 	}
 
-	wostream& operator <<(wostream& op, Vector2d& v){
+	std::wostream& operator <<(std::wostream& op, Vector2d& v){
 		// for debug - print vector to file
 		op << L"(" << v.getx() << L", " << v.gety() << L")";
 		return op;
 	}
 
-	wostream& operator <<(wostream& op, Vector3d& v){
+	std::wostream& operator <<(std::wostream& op, Vector3d& v){
 		// for debug - print vector to file
 		op << L"(" << v.getx() << L", " << v.gety() << L"," << v.getz() << L")";
 		return op;
 	}
 
-	wostream& operator <<(wostream& op, Circle& c){
+	std::wostream& operator <<(std::wostream& op, Circle& c){
 		// for debug - print circle to file
 		if(c.ok == false)
 			op << L"ok=\"false\"";
@@ -118,7 +118,7 @@ namespace geoff_geometry {
 		return op;
 	}
 
-	wostream& operator <<(wostream& op, Span& sp){
+	std::wostream& operator <<(std::wostream& op, Span& sp){
 		// for debug - print span to file stream		
 		op << L"p0 = " << sp.p0 << L" p1=" << sp.p1;
 		if(sp.dir) {
